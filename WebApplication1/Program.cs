@@ -1,5 +1,17 @@
 var builder = WebApplication.CreateBuilder(args);
 
+// Add CORS policy
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowSpecificOrigin",
+        policy =>
+        {
+            policy.WithOrigins("https://noraenmaai.github.io") // Allow your frontend
+                  .AllowAnyMethod() // Allow GET, POST, PUT, DELETE
+                  .AllowAnyHeader(); // Allow all headers
+        });
+});
+
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -8,6 +20,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+app.UseCors("AllowSpecificOrigin");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
